@@ -1,0 +1,3 @@
+[submodule "BaseLib"]
+	path = BaseLib
+	url = git@github.com:MicrocontrollersAndMore/OpenCV_3_License_Plate_Recognition_Python.git
