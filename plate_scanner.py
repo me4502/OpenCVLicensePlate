@@ -7,7 +7,8 @@ sys.path.insert(1, os.path.join(os.path.dirname(os.path.abspath(__file__)),
 import DetectChars
 import cv2
 import DetectPlates
-
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 def run():
     training_data = DetectChars.loadKNNDataAndTrainKNN()
@@ -35,5 +36,17 @@ def run():
     print "Best Fit: " + best_fit
 
 
+def get_page(rego):
+    driver = webdriver.Chrome()
+    driver.get("https://www.service.transport.qld.gov.au/checkrego/application/TermAndConditions.xhtml?windowId=9b2")
+    driver.find_element_by_id("tAndCForm:confirmButton").click()
+    driver.find_element_by_id("vehicleSearchForm:plateNumber").send_keys(rego)
+    driver.find_element_by_id("vehicleSearchForm:confirmButton").click()
+    src = driver.page_source
+    driver.close()
+    return src
+
 if __name__ == '__main__':
     run()
+    page = get_page("")
+    print page
