@@ -5,6 +5,10 @@ import time
 from openalpr import Alpr
 from selenium import webdriver
 from web_scraper import read_page
+from googleapiclient.discovery import build
+
+google_api_key = None
+cse_token = None
 
 
 def run(filename):
@@ -31,6 +35,16 @@ def get_plate_info(rego):
             and (time.time() - os.path.getmtime(filename) < 60 * 60 * 24):
         return json.loads(open(filename, "r").read())
     data = read_page(get_page(rego))
+    if google_api_key is not None:
+        service = build("customsearch", "v1", developerKey=google_api_key)
+        res = service.cse().list(
+            q=data["Vehicle Identification Number (VIN)"],
+            cx=cse_token, num=1).execute()
+        for request in res["queries"]["request"]:
+            if int(request["totalResults"]) == 0:
+                data["Resell"] = "Unlikely"
+            else:
+                data["Resell"] = "Yes"
     open(filename, "w").write(json.dumps(data))
     return data
 
@@ -48,6 +62,11 @@ def get_page(rego):
 
 
 if __name__ == '__main__':
+    if os.path.exists("settings.json"):
+        settings_data = json.loads(open("settings.json", "rw").read())
+        google_api_key = settings_data['google-api-key']
+        cse_token = settings_data['cse-token']
+
     if not os.path.exists("cache"):
         os.makedirs("cache")
 

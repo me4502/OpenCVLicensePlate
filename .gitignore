@@ -123,3 +123,4 @@ fabric.properties
 .DS_Store
 
 cache/
+settings.json
