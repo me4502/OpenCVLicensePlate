@@ -1,3 +1,7 @@
+import json
+import os
+
+import time
 from openalpr import Alpr
 from selenium import webdriver
 from web_scraper import read_page
@@ -16,9 +20,19 @@ def run(file):
 
     if best_fit is not None:
         print "Found License: " + best_fit + " for file: " + file
-        print read_page(get_page(best_fit))
+        print get_plate_info(best_fit)
     else:
         print "Failed to find a license plate for file: " + file
+
+
+def get_plate_info(rego):
+    filename = "cache/" + rego + ".json"
+    if os.path.exists(filename) \
+            and (time.time() - os.path.getmtime(filename) < 60 * 60 * 24):
+        return json.loads(open(filename, "r").read())
+    data = read_page(get_page(rego))
+    open(filename, "w").write(json.dumps(data))
+    return data
 
 
 def get_page(rego):
@@ -34,6 +48,9 @@ def get_page(rego):
 
 
 if __name__ == '__main__':
+    if not os.path.exists("cache"):
+        os.makedirs("cache")
+
     alpr = Alpr("au", "openalpr.conf", "")
     alpr.set_top_n(20)
     alpr.set_default_region("qld")
