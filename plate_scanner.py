@@ -7,8 +7,8 @@ from selenium import webdriver
 from web_scraper import read_page
 
 
-def run(file):
-    results = alpr.recognize_file(file)
+def run(filename):
+    results = alpr.recognize_file(filename)
 
     best_fit = None
 
@@ -19,10 +19,10 @@ def run(file):
                 break
 
     if best_fit is not None:
-        print "Found License: " + best_fit + " for file: " + file
+        print "Found License: " + best_fit + " for file: " + filename
         print get_plate_info(best_fit)
     else:
-        print "Failed to find a license plate for file: " + file
+        print "Failed to find a license plate for file: " + filename
 
 
 def get_plate_info(rego):
@@ -37,8 +37,8 @@ def get_plate_info(rego):
 
 def get_page(rego):
     driver = webdriver.Chrome()
-    driver.get(
-        "https://www.service.transport.qld.gov.au/checkrego/application/TermAndConditions.xhtml?windowId=9b2")
+    driver.get("https://www.service.transport.qld.gov.au/checkrego/"
+               "application/TermAndConditions.xhtml?windowId=9b2")
     driver.find_element_by_id("tAndCForm:confirmButton").click()
     driver.find_element_by_id("vehicleSearchForm:plateNumber").send_keys(rego)
     driver.find_element_by_id("vehicleSearchForm:confirmButton").click()
@@ -52,7 +52,8 @@ if __name__ == '__main__':
         os.makedirs("cache")
 
     alpr = Alpr("au", "openalpr.conf", "")
-    alpr.set_top_n(20)
+    alpr.set_top_n(50)
     alpr.set_default_region("qld")
 
-    run("Car photos/demo_car2.jpg")
+    for filename in os.listdir("Car photos"):
+        run("Car photos/" + filename)
