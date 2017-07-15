@@ -1,5 +1,3 @@
-import os
-
 from openalpr import Alpr
 from selenium import webdriver
 from web_scraper import read_page
@@ -39,5 +37,4 @@ if __name__ == '__main__':
     alpr.set_top_n(20)
     alpr.set_default_region("qld")
 
-    for filename in os.listdir("Car photos"):
-        run("Car photos/" + filename)
+    run("Car photos/demo_car2.jpg")
