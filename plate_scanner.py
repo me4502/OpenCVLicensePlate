@@ -18,9 +18,23 @@ def run():
         print "Invalid Training Data"
         return
 
-    test_image = cv2.imread("BaseLib/LicPlateImages/1.png")
+    test_image = cv2.imread("BaseLib/LicPlateImages/3.png")
     if test_image is None:
         print "Failed to load test data"
+
+    plates = DetectPlates.detectPlatesInScene(test_image)
+    chars = DetectChars.detectCharsInPlates(plates)
+
+    best_fit = None
+
+    for char in chars:
+        if best_fit is None:
+            best_fit = char.strChars
+        else:
+            if len(char.strChars) == 6:
+                best_fit = char.strChars
+
+    print "Best Fit: " + best_fit
 
 if __name__ == '__main__':
     run()
