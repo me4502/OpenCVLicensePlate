@@ -2,6 +2,7 @@ from openalpr import Alpr
 from selenium import webdriver
 from web_scraper import read_page
 
+
 def run(file):
     results = alpr.recognize_file(file)
 
@@ -15,7 +16,7 @@ def run(file):
 
     if best_fit is not None:
         print "Found License: " + best_fit + " for file: " + file
-        read_page(get_page(best_fit))
+        print read_page(get_page(best_fit))
     else:
         print "Failed to find a license plate for file: " + file
 

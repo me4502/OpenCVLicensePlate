@@ -1,20 +1,16 @@
 from bs4 import BeautifulSoup
-from urllib import urlopen
-import re
-
-# create a dictionary
-list = []
 
 
-# specify the url
 def read_page(webpage):
     soup = BeautifulSoup(webpage, 'html.parser')
-    dl_list = soup.findAll('dl', attrs={'class':'data'})
+    dl_list = soup.findAll('dl', attrs={'class': 'data'})
+
+    page_data = {}
+
     for dl in dl_list:
         dd_list = dl.findAll('dd')
-        for dd in dd_list:
+        dt_list = dl.findAll('dt')
+        for index in range(len(dd_list)):
+            page_data[dt_list[index].text.strip()] = dd_list[index].text.strip()
 
-
-
-
-
+    return page_data
