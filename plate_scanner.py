@@ -3,8 +3,7 @@ import os
 
 import time
 from openalpr import Alpr
-from selenium import webdriver
-from web_scraper import read_page
+from web_scraper import read_page, get_page
 from googleapiclient.discovery import build
 
 google_api_key = None
@@ -47,18 +46,6 @@ def get_plate_info(rego):
                 data["Resell"] = "Yes"
     open(filename, "w").write(json.dumps(data))
     return data
-
-
-def get_page(rego):
-    driver = webdriver.Chrome()
-    driver.get("https://www.service.transport.qld.gov.au/checkrego/"
-               "application/TermAndConditions.xhtml?windowId=9b2")
-    driver.find_element_by_id("tAndCForm:confirmButton").click()
-    driver.find_element_by_id("vehicleSearchForm:plateNumber").send_keys(rego)
-    driver.find_element_by_id("vehicleSearchForm:confirmButton").click()
-    src = driver.page_source
-    driver.close()
-    return src
 
 
 if __name__ == '__main__':

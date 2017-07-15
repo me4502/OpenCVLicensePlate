@@ -1,4 +1,17 @@
 from bs4 import BeautifulSoup
+from selenium import webdriver
+
+
+def get_page(rego):
+    driver = webdriver.Chrome()
+    driver.get("https://www.service.transport.qld.gov.au/checkrego/"
+               "application/TermAndConditions.xhtml?windowId=9b2")
+    driver.find_element_by_id("tAndCForm:confirmButton").click()
+    driver.find_element_by_id("vehicleSearchForm:plateNumber").send_keys(rego)
+    driver.find_element_by_id("vehicleSearchForm:confirmButton").click()
+    src = driver.page_source
+    driver.close()
+    return src
 
 
 def read_page(webpage):
