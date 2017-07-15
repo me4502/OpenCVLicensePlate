@@ -9,8 +9,19 @@ from googleapiclient.discovery import build
 google_api_key = None
 cse_token = None
 
+alpr = None
+
+
+def setup():
+    global alpr
+    alpr = Alpr("au", "openalpr.conf", "")
+    alpr.set_top_n(50)
+    alpr.set_default_region("qld")
+
 
 def run(filename):
+    if alpr is None:
+        setup()
     results = alpr.recognize_file(filename)
 
     best_fit = None
@@ -22,10 +33,9 @@ def run(filename):
                 break
 
     if best_fit is not None:
-        print "Found License: " + best_fit + " for file: " + filename
-        print get_plate_info(best_fit)
+        return get_plate_info(best_fit)
     else:
-        print "Failed to find a license plate for file: " + filename
+        return "Failed to find a license plate for file: " + filename
 
 
 def get_plate_info(rego):
@@ -57,10 +67,7 @@ if __name__ == '__main__':
     if not os.path.exists("cache"):
         os.makedirs("cache")
 
-    alpr = Alpr("au", "openalpr.conf", "")
-    alpr.set_top_n(50)
-    alpr.set_default_region("qld")
+    setup()
 
     for filename in os.listdir("Car photos"):
-        run("Car photos/" + filename)
-
+        print run("Car photos/" + filename)
