@@ -1,11 +1,12 @@
 from bs4 import BeautifulSoup
-import urllib
-def cool():
-    r = urllib.urlopen('https://www.service.transport.qld.gov.au/checkrego/application/VehicleResult.xhtml?windowId=de9').read()
-    print r
+from urllib import urlopen
+import re
 
-cool()
-
-
-#if __name__ == '__main__':
- #   cool()
+# specify the url
+def read_page(webpage):
+    soup = BeautifulSoup(webpage, 'html.parser')
+    dl_list = soup.findAll('dl', attrs={'class':'data'})
+    for dl in dl_list:
+        dd_list = dl.findAll('dd')
+        for dd in dd_list:
+            print dd.text
