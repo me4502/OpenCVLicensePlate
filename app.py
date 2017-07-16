@@ -29,9 +29,9 @@ def send_js(path):
     return send_from_directory('static/html/js', path)
 
 
-@app.route('/plugins/<path:path>')
-def send_plugins(path):
-    return send_from_directory('static/plugins', path)
+@app.route('/images/<path:path>')
+def send_images(path):
+    return send_from_directory('static/html/images', path)
 
 
 @app.route('/add_by_file/<filename>', methods=['GET'])
