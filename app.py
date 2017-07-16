@@ -14,6 +14,11 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 app.config['UPLOAD_FOLDER'] = 'Car photos'
 
 
+@app.route('/', methods=['GET'])
+def index():
+    return open('static/html/index.html').read()
+
+
 @app.route('/add_by_file/<filename>', methods=['GET'])
 def add_by_file(filename):
     images = list()
