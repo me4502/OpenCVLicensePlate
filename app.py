@@ -41,6 +41,10 @@ def add_by_file(filename):
         images = json.loads(open(cache_file, "r").read())
     result = plate_scanner.run("Car photos/" + filename)
     if type(result) is dict and len(result) > 0:
+        rego = result['Registration number']
+        for image in images:
+            if image['Registration number'] == rego:
+                images.remove(image)
         images.append(result)
         open(cache_file, "w").write(json.dumps(images))
     return json.dumps(result)
