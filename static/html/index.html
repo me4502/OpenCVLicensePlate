@@ -113,9 +113,9 @@
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
                         <div class="white-box">
-                            <h3 class="box-title">Traffic Chart - 17/07/2017</h3>
+                            <h3 class="box-title">Estimated Traffic Chart - 17/07/2017</h3>
                             
-                            <img class="col-md-12" src="images/graph.png">
+                            <img class="col-md-10" src="images/graph.png">
                             <br>
                             <br>
                             <br>
@@ -156,7 +156,6 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>REGISTRATION</th>
                                             <th>VIN</th>
                                             <th>EXPIRY</th>
@@ -167,56 +166,7 @@
 
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td class="txt-oflo">Elite admin</td>
-                                            <td>SALE</td>
-                                            <td class="txt-oflo">April 18, 2017</td>
-                                            <td><span class="text-success">$24</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td class="txt-oflo">Real Homes WP Theme</td>
-                                            <td>EXTENDED</td>
-                                            <td class="txt-oflo">April 19, 2017</td>
-                                            <td><span class="text-info">$1250</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td class="txt-oflo">Ample Admin</td>
-                                            <td>EXTENDED</td>
-                                            <td class="txt-oflo">April 19, 2017</td>
-                                            <td><span class="text-info">$1250</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td class="txt-oflo">Medical Pro WP Theme</td>
-                                            <td>TAX</td>
-                                            <td class="txt-oflo">April 20, 2017</td>
-                                            <td><span class="text-danger">-$24</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td class="txt-oflo">Hosting press html</td>
-                                            <td>SALE</td>
-                                            <td class="txt-oflo">April 21, 2017</td>
-                                            <td><span class="text-success">$24</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td class="txt-oflo">Digital Agency PSD</td>
-                                            <td>SALE</td>
-                                            <td class="txt-oflo">April 23, 2017</td>
-                                            <td><span class="text-danger">-$14</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>7</td>
-                                            <td class="txt-oflo">Helping Hands WP Theme</td>
-                                            <td>MEMBER</td>
-                                            <td class="txt-oflo">April 22, 2017</td>
-                                            <td><span class="text-success">$64</span></td>
-                                        </tr>
+                                    <tbody id="main_table_body">
                                     </tbody>
                                 </table>
                             </div>
@@ -246,6 +196,37 @@
     <script src="js/waves.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
+
+    <script>
+        var lastData = null;
+
+        function refreshData() {
+            $.get("/get_info/10", function (response) {
+                var jsResponse = JSON.parse(response);
+                if (jsResponse === lastData) {
+                    return;
+                }
+                lastData = jsResponse;
+                $("#main_table_body tr").remove();
+                for (var row in jsResponse) {
+                    var output = "<tr>";
+                    var rowData = jsResponse[row];
+                    output += "<td>" + rowData['Registration number'] + "</td>";
+                    output += "<td>" + rowData['Vehicle Identification Number (VIN)'] + "</td>";
+                    output += "<td>" + rowData['Expiry'] + "</td>";
+                    output += "<td>" + rowData['Status'] + "</td>";
+                    output += "<td>" + rowData['Purpose of use'] + "</td>";
+                    output += "<td>" + rowData['Description'] + "</td>";
+                    output += "<td>" + rowData['Resell'] + "</td>";
+                    output += "</tr>";
+                    $("#main_table_body:last-child").after(output);
+                }
+            });
+        }
+
+        refreshData();
+        setInterval(refreshData, 5000)
+    </script>
 </body>
 
 </html>

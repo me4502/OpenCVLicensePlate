@@ -40,8 +40,9 @@ def add_by_file(filename):
     if os.path.exists(cache_file):
         images = json.loads(open(cache_file, "r").read())
     result = plate_scanner.run("Car photos/" + filename)
-    images.append(result)
-    open(cache_file, "w").write(json.dumps(images))
+    if type(result) is dict and len(result) > 0:
+        images.append(result)
+        open(cache_file, "w").write(json.dumps(images))
     return json.dumps(result)
 
 
