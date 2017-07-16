@@ -219,7 +219,7 @@
                     output += "<td>" + rowData['Description'] + "</td>";
                     output += "<td>" + rowData['Resell'] + "</td>";
                     output += "</tr>";
-                    $("#main_table_body:last-child").after(output);
+                    $("#main_table_body").append(output);
                 }
             });
         }
