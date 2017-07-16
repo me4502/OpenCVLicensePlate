@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 import plate_scanner
 
-from flask import Flask, request, flash, redirect
+from flask import Flask, request, flash, redirect, send_from_directory
 
 app = Flask(__name__)
 
@@ -17,6 +17,21 @@ app.config['UPLOAD_FOLDER'] = 'Car photos'
 @app.route('/', methods=['GET'])
 def index():
     return open('static/html/index.html').read()
+
+
+@app.route('/css/<path:path>')
+def send_css(path):
+    return send_from_directory('static/html/css', path)
+
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('static/html/js', path)
+
+
+@app.route('/plugins/<path:path>')
+def send_plugins(path):
+    return send_from_directory('static/plugins', path)
 
 
 @app.route('/add_by_file/<filename>', methods=['GET'])
