@@ -207,7 +207,7 @@
                     return;
                 }
                 lastData = jsResponse;
-                $("#main_table_body tr").remove();
+                $("#main_table_body").find("tr").remove();
                 for (var row in jsResponse) {
                     var output = "<tr>";
                     var rowData = jsResponse[row];
